@@ -724,5 +724,13 @@
   buildColorPicker();
   setPreviewWidth(previewWidth);
   editor.value = SAMPLE_MD;
+  try {
+    var handoffMd = localStorage.getItem('yth.create.handoff') || '';
+    if (handoffMd.trim()) {
+      localStorage.removeItem('yth.create.handoff');
+      editor.value = handoffMd;
+      toast('已载入 AI 创作的文章，选一套主题即可复制');
+    }
+  } catch (error) { /* 隐私模式等场景回落到示例文章 */ }
   convert().catch(function () {});
 })();

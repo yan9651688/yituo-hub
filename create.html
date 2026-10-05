@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>YI TUO HUB STUDIO · AI 文章创作</title>
+<meta name="description" content="填入你自己的 API 密钥，选一个模型，把选题交给他，流式生成可直接送进排版工坊的公众号文章 Markdown；支持自定义 prompt、自定义字数、粘贴配图自动内联"/>
+<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="create.css"/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+</head>
+<body>
+<header class="topbar rise">
+  <div class="brand">
+    <span class="logo">
+      <svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true">
+        <defs>
+          <linearGradient id="yt-logo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#33546F"/><stop offset="1" stop-color="#1D3045"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#yt-logo)"/>
+        <g stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round">
+          <line x1="24" y1="27" x2="24" y2="14"/>
+          <line x1="24" y1="27" x2="13.5" y2="34.5"/>
+          <line x1="24" y1="27" x2="34.5" y2="34.5"/>
+        </g>
+        <circle cx="24" cy="27" r="4.4" fill="#FFFFFF"/>
+        <circle cx="24" cy="12.8" r="3.1" fill="#FFFFFF"/>
+        <circle cx="12.8" cy="35.2" r="3.1" fill="#FFFFFF"/>
+        <circle cx="35.2" cy="35.2" r="3.1" fill="#FFFFFF"/>
+      </svg>
+    </span>
+    <div>
+      <h1>YI TUO HUB STUDIO <em>AI 文章创作</em></h1>
+      <p>Topic → Markdown Writing Studio</p>
+    </div>
+  </div>
+  <div class="actions">
+    <a class="btn icon-round" href="https://github.com/yan9651688/yituo-hub" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+    <a class="btn ghost" href="index.html">首页</a>
+    <a class="btn ghost" href="studio.html">排版工坊</a>
+  </div>
+</header>
+
+<main class="create-workspace rise" style="animation-delay:.08s">
+  <section class="pane brief-pane">
+    <div class="pane-toolbar">
+      <strong>创作台</strong>
+      <span id="connBadge" class="badge">未连接</span>
+      <span class="spacer"></span>
+      <button id="btnModels" class="btn tiny ghost" type="button">刷新模型</button>
+    </div>
+    <div class="brief-body">
+      <div class="api-card">
+        <div class="api-row">
+          <label class="api-field">API 地址
+            <input id="apiBase" type="text" placeholder="https://api.yituohub.com" spellcheck="false" autocomplete="off"/>
+          </label>
+          <label class="api-field">API 密钥
+            <input id="apiKey" type="password" placeholder="sk-…（只保存在本浏览器）" spellcheck="false" autocomplete="off"/>
+          </label>
+        </div>
+        <div class="api-row">
+          <label class="api-field grow">模型
+            <select id="modelSelect"><option value="">填好密钥后载入模型列表</option></select>
+          </label>
+        </div>
+        <p class="api-hint">默认请求 <span>https://api.yituohub.com/</span>，OpenAI 兼容接口；密钥只存在你的浏览器 localStorage，直连你填写的 API，本站不中转。</p>
+      </div>
+
+      <label class="field-label" for="topic">选题 · 想写什么</label>
+      <textarea id="topic" placeholder="例如：写给公众号读者，聊聊为什么“信息过载”反而让人更焦虑，并给出 3 个可操作的解法"></textarea>
+
+      <span class="field-label">文章类型</span>
+      <div class="chip-row" id="typeRow"></div>
+      <textarea id="customType" class="custom-brief" hidden spellcheck="false" placeholder="自定义类型 prompt，例如：&#10;小红书种草文风，每段不超过三行，结尾引导关注并点出下期预告"></textarea>
+
+      <span class="field-label">篇幅</span>
+      <div class="chip-row" id="lenRow"></div>
+      <div id="customLenRow" class="custom-len-row" hidden>
+        <input id="customLen" type="number" min="100" max="20000" step="100" placeholder="2200"/>
+        <span class="custom-len-unit">字左右</span>
+      </div>
+
+      <label class="field-label" for="extra">补充要求（可选）</label>
+      <input id="extra" type="text" placeholder="受众、语气、必须覆盖的要点、数据或案例…" autocomplete="off"/>
+
+      <span class="field-label">配图</span>
+      <div class="image-card" id="imageCard">
+        <div class="image-drop" id="imageDrop">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <span>Ctrl+V 粘贴 / 拖入图片，或</span>
+          <button id="btnPickImage" class="btn tiny ghost" type="button">选择文件</button>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden/>
+          <p class="api-hint">粘贴的图片自动压成 base64 内联进 Markdown，不依赖图床；配置图床后则自动上传换成外链。</p>
+        </div>
+        <div class="image-tray" id="imageTray" hidden></div>
+        <div class="imgbed-toggle-row">
+          <button id="imgbedToggle" class="btn tiny ghost" type="button">图床设置</button>
+          <span id="imgbedState" class="imgbed-state">未启用</span>
+        </div>
+        <div class="imgbed-panel" id="imgbedPanel" hidden>
+          <div class="api-row">
+            <label class="api-field">上传地址
+              <input id="imgbedUrl" type="text" placeholder="https://img.example.com/api/upload" spellcheck="false" autocomplete="off"/>
+            </label>
+            <label class="api-field">密钥（可选）
+              <input id="imgbedKey" type="password" placeholder="留空则匿名上传" spellcheck="false" autocomplete="off"/>
+            </label>
+          </div>
+          <div class="api-row">
+            <label class="api-field">文件字段名
+              <input id="imgbedField" type="text" placeholder="file" spellcheck="false" autocomplete="off"/>
+            </label>
+            <label class="api-field">密钥发送方式
+              <select id="imgbedAuth">
+                <option value="both">Bearer 头 + token 字段</option>
+                <option value="bearer">仅 Bearer 头</option>
+                <option value="header">仅裸 Authorization 头</option>
+                <option value="form">仅 token 字段</option>
+                <option value="none">不发送</option>
+              </select>
+            </label>
+          </div>
+          <p class="api-hint">兼容常见自建图床（兰空 / EasyImage / sm.ms 风格）：自动从返回 JSON 里解析图片链接；上传失败会自动回退 base64 内联。</p>
+        </div>
+      </div>
+
+      <label class="handoff-note">
+        <input type="checkbox" id="appendMode"/>
+        追加模式：保留右侧已有内容，在其后继续写
+      </label>
+    </div>
+    <div class="pane-actions">
+      <button id="btnGenerate" class="btn primary" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/><path d="M19 15l.9 2.6L22.5 18l-2.6.9L19 21l-.9-2.1-2.6-.9 2.6-.4z"/></svg>
+        开始创作
+      </button>
+      <button id="btnStop" class="btn ghost" type="button" hidden>停止</button>
+    </div>
+  </section>
+
+  <section class="pane output-pane">
+    <div class="pane-toolbar">
+      <strong>文章产出</strong>
+      <span id="statBadge" class="badge">等待创作</span>
+      <span class="spacer"></span>
+      <button id="btnCopy" class="btn tiny ghost" type="button">复制 Markdown</button>
+      <button id="btnToStudio" class="btn tiny primary" type="button">
+        去排版
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    <textarea id="output" spellcheck="false" placeholder="生成的 Markdown 会实时流式出现在这里，可直接手改、点配图插入。&#10;&#10;写完点右上角「去排版」，直接送进工坊选主题、复制到公众号。"></textarea>
+  </section>
+</main>
+
+<footer class="foot rise" style="animation-delay:.2s">
+  AI 创作 · 直连你的 OpenAI 兼容 API · AGPL-3.0 开源
+</footer>
+
+<div id="toast" class="toast" hidden></div>
+<script src="create.js"></script>
+</body>
+</html>

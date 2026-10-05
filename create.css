@@ -1,0 +1,274 @@
+/* Yi Tuo Hub · AI 文章创作 —— 沿用排版工坊的电影感视觉语言 */
+.create-workspace {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(330px, 0.94fr) minmax(360px, 1.06fr);
+  gap: 14px;
+  padding: 18px 32px 8px;
+  min-height: 66vh;
+}
+
+/* ---------- 创作台 ---------- */
+.brief-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.api-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #FBFCFD;
+  padding: 13px 14px;
+  display: grid;
+  gap: 11px;
+}
+.api-row { display: flex; gap: 10px; }
+.api-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--sub);
+}
+.api-field.grow { flex: 1; }
+.api-field input,
+.api-field select {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: var(--text);
+  outline: none;
+  min-width: 0;
+  width: 100%;
+  transition: border-color 0.25s;
+}
+.api-field input:focus,
+.api-field select:focus { border-color: var(--dark); }
+.api-hint {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: var(--sub2);
+}
+.api-hint span { color: var(--sub); font-weight: 600; }
+
+.field-label {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sub);
+}
+
+#topic {
+  min-height: 92px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #FDFDFE;
+  padding: 12px 14px;
+  font: 13px/1.75 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s;
+}
+#topic:focus { border-color: var(--dark); }
+#topic::placeholder, #output::placeholder { color: #B3BECA; }
+
+#extra {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  padding: 9px 14px;
+  font-size: 12.5px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.25s;
+}
+#extra:focus { border-color: var(--dark); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--sub);
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s, background 0.25s;
+}
+.chip:hover { color: var(--dark); border-color: var(--dark); }
+.chip.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+.chip:focus-visible { outline: 2px solid rgba(29, 48, 69, 0.22); outline-offset: 2px; }
+
+.handoff-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--sub);
+  cursor: pointer;
+}
+.handoff-note input { accent-color: var(--dark); }
+
+/* ---------- 自定义类型 / 篇幅 ---------- */
+.custom-brief {
+  min-height: 72px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #FDFDFE;
+  padding: 10px 14px;
+  font: 12.5px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.25s;
+}
+.custom-brief:focus { border-color: var(--dark); }
+.custom-brief[hidden], .custom-len-row[hidden] { display: none !important; }
+.custom-len-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.custom-len-row input {
+  width: 110px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.25s;
+}
+.custom-len-row input:focus { border-color: var(--dark); }
+.custom-len-unit { font-size: 12px; color: var(--sub); }
+
+/* ---------- 配图 ---------- */
+.image-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #FBFCFD;
+  padding: 13px 14px;
+  display: grid;
+  gap: 11px;
+}
+.image-drop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 1.5px dashed #C8D2DC;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--sub);
+  font-size: 12.5px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.image-drop.over { border-color: var(--dark); background: #F0F4F8; }
+.image-drop .api-hint { flex: 1 1 100%; margin: 4px 0 0; }
+.image-tray {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.image-tray[hidden] { display: none; }
+.tray-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+.tray-item.hosted { border-color: #BBD9C9; }
+.tray-item img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 7px;
+  background: #F1F4F7;
+}
+.tray-meta { display: flex; flex-direction: column; min-width: 0; }
+.tray-meta strong {
+  font-size: 12px;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tray-meta small { margin-top: 2px; font-size: 10px; color: var(--sub2); }
+.tray-actions { grid-column: 1 / -1; display: flex; gap: 6px; }
+.imgbed-toggle-row { display: flex; align-items: center; gap: 10px; }
+.imgbed-state { font-size: 10.5px; color: var(--sub2); }
+.imgbed-panel {
+  border-top: 1px solid var(--line);
+  padding-top: 11px;
+  display: grid;
+  gap: 11px;
+}
+.imgbed-panel[hidden] { display: none; }
+
+.pane-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+}
+.pane-actions .btn { flex: 1; justify-content: center; }
+
+/* ---------- 文章产出 ---------- */
+#output {
+  flex: 1;
+  border: 0;
+  outline: none;
+  resize: none;
+  padding: 16px;
+  font: 13px/1.75 "SF Mono", Menlo, Consolas, "PingFang SC", monospace;
+  color: var(--text);
+  background: #FDFDFE;
+}
+.output-pane.generating #output { color: var(--sub); }
+
+@keyframes badgePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.badge.live {
+  background: #EDF3FA;
+  color: #1D4ED8;
+  border-color: #D5E2F2;
+  animation: badgePulse 1.6s ease-in-out infinite;
+}
+
+@media (max-width: 900px) {
+  .create-workspace { grid-template-columns: 1fr; padding: 14px 16px 6px; }
+  .pane { min-height: 320px; }
+  .output-pane { min-height: 420px; }
+  .topbar { padding: 12px 16px; }
+}
+@media (max-width: 600px) {
+  .api-row { flex-direction: column; }
+  .pane-toolbar { flex-wrap: wrap; }
+  .pane-toolbar .spacer { display: none; }
+  .pane-toolbar .btn { margin-left: auto; }
+}
